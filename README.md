@@ -14,7 +14,7 @@ This project aims to increase my understanding of Linux, Docker, Tor, AI, IDS an
 - 🔴  [Kali](https://kali.org/) Instance (maybe [Parrot](https://parrotsec.org/), havent played with that yet)
 - 🔴  [Tor](https://torproject.org) Relay with [Nyx](https://nyx.torproject.org) Monitoring
 - 🔴  Intrusion Detection with [Suricata](https://suricata.io/)
-- 🔴  An as yet undecided AI project
+- 🔴  Run Dolphin Mistral 2.8 Locally with Ollama.
 - 🔴  And Beyond?
   
 ## Table of Contents
