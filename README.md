@@ -24,6 +24,7 @@ This project aims to increase my understanding of Linux, Docker, Tor, AI, IDS an
   - [Goals](#goals)
   - [Table of Contents](#table-of-contents)
   - [Lets Begin!](#lets-begin!)
+  - [Docker](#docker)
  
 ## Lets Begin!
 
