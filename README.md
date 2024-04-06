@@ -63,7 +63,7 @@ This is the easy bit.
   sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 - ```bash
-  # Verify that the Docker Engine installation
+  # Verify the Docker Engine installation
   sudo docker run hello-world
 
 - Aaaaand done! So far, so simple. 
