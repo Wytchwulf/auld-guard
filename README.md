@@ -7,7 +7,7 @@ This project aims to increase my understanding of Linux, Docker, Tor, AI, IDS an
 ## Goals
 
 - 🟢  Start from scratch with a fresh install of [Ubuntu Server 22.04 LTS](https://ubuntu.com/download/server).
-- 🔴  Install [Docker Engine](https://docs.docker.com/engine/install/ubuntu/).
+- 🟢  Install [Docker Engine](https://docs.docker.com/engine/install/ubuntu/).
 - 🔴  Create a Docker Network to run [Wetty](https://github.com/butlerx/wetty), [Nginx](https://nginx.org/en/) and [Certbot](https://github.com/certbot/certbot) for easy access to my server via my [DDNS](https://duckdns.org) on any browser.
 - 🔴  Bring it all together with Docker Compose.
 - 🔴  Harden security for internet facing port (Let's Encrypt SSL/TLS Encryption, HSTS & CSP headers, UFW, Fail2Ban, Rate Limiting, 2FA, Automation of monitoring, audit logs and updates, Recovery Backup.)
@@ -36,5 +36,36 @@ This is the easy bit.
 - Blew off the dust, powered the old man up and tapped F2 like a madman until I hit BIOS, selected boot from USB, save and reset.
 - Followed the instructions, decided against using snap for docker - opting for a clean start, selected option for OpenSSH and.....
 - Ubuntu Server up and running, SSH from laptop. 
-- Hello, world. 
+- Hello, world.
+
+## Docker
+
+- Following the documentation for Docker installation on Ubuntu :
+  
+- ```bash
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+   
+  # Add the repository to Apt sources:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+- ```bash
+  # Install latest version
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+- ```bash
+  # Verify that the Docker Engine installation
+  sudo docker run hello-world
+
+- Aaaaand done! So far, so simple. 
+
+  ![alt text](https://github.com/Wytchwulf/auld-guard/blob/main/Screenshot%20from%202024-04-06%2023-18-04.png)
 
