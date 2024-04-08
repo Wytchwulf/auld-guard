@@ -29,7 +29,7 @@ Wherever relevant I will link the sources I am using for anyone interested in an
   - [Table of Contents](#table-of-contents)
   - [Lets Begin!](#lets-begin!)
   - [Docker](#docker)
-* [Docker Compose](#dockercompose)
+  - [Docker Compose - Wetty / Nginx / Certbot](#docker-compose)
  
 ## Lets Begin!
 
