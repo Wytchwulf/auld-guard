@@ -12,9 +12,9 @@ Wherever relevant I will link the sources I am using for anyone interested in an
 
 - 🟢  Start from scratch with a fresh install of [Ubuntu Server 22.04 LTS](https://ubuntu.com/download/server).
 - 🟢  Install [Docker Engine](https://docs.docker.com/engine/install/ubuntu/).
-- 🔴  Create a Docker Network to run [Wetty](https://github.com/butlerx/wetty), [Nginx](https://nginx.org/en/) and [Certbot](https://github.com/certbot/certbot) for easy access to my server via my [DDNS](https://duckdns.org) on any browser.
-- 🔴  Bring it all together with Docker Compose.
-- 🔴  Harden security for internet facing port (Let's Encrypt SSL/TLS Encryption, HSTS & CSP headers, UFW, Fail2Ban, Rate Limiting, 2FA, Automation of monitoring, audit logs and updates, Recovery Backup.)
+- 🟢  Create a Docker Network to run [Wetty](https://github.com/butlerx/wetty), [Nginx](https://nginx.org/en/) and [Certbot](https://github.com/certbot/certbot) for easy access to my server via my [DDNS](https://duckdns.org) on any browser.
+- 🟢  Bring it all together with Docker Compose.
+- 🟢  Harden security for internet facing port (Let's Encrypt SSL/TLS Encryption, HSTS & CSP headers, UFW, Fail2Ban, Rate Limiting, 2FA, Automation of monitoring, audit logs and updates, Recovery Backup.)
 - 🔴  [Kali](https://kali.org/) Instance (maybe [Parrot](https://parrotsec.org/), havent played with that yet)
 - 🔴  [Tor](https://torproject.org) Relay with [Nyx](https://nyx.torproject.org) Monitoring
 - 🔴  Intrusion Detection with [Suricata](https://suricata.io/)
@@ -75,7 +75,7 @@ This is the easy bit.
 
   ![alt text](https://github.com/Wytchwulf/auld-guard/blob/main/Screenshot%20from%202024-04-06%2023-18-04.png)
 
-## Docker Compose - Wetty / Nginx / Certbot
+## Docker Compose
 
 This project is a proof of concept, so I'll not be keeping it. One of the benefits of spinning these projects up on containers is that I can experiment with a variety of programs without the hassle of virtualising entire machines. Just pull an image, run it, and when I'm done just tear it down. 
 
