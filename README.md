@@ -77,7 +77,7 @@ This is the easy bit.
 
 ## Docker Compose - Wetty / Nginx / Certbot
 
-This project is a proof of concept, so I'll not be keeping it. One of the benefits of spinning these projects up on containers is that I can experiment with a variety of programs without the hassle of vitualising entire machines. Just pull an image, run it, and when I'm done just tear it down. 
+This project is a proof of concept, so I'll not be keeping it. One of the benefits of spinning these projects up on containers is that I can experiment with a variety of programs without the hassle of virtualising entire machines. Just pull an image, run it, and when I'm done just tear it down. 
 
 - First I'll need a network for the containers to communicate in and for the server to communicate to. 
 - ```bash
@@ -168,7 +168,7 @@ This project is a proof of concept, so I'll not be keeping it. One of the benefi
 
 - With the reverse proxy in place, insecure connections will be redirected to the https on port 443 where I have ssl certificates set up with LetsEncrypt. To get the certs I needed to request them:
 - ```bash
-docker run --rm -v "/home/analyst/certbot/conf:/etc/letsencrypt" -v "/home/analyst/certbot/www:/var/www/certbot" certbot/certbot certonly --webroot --webroot-path=/var/www/certbot -d stingily5411.duckdns.org --email seanpmurdoch@proton.me --agree-tos --no-eff-email
+  docker run --rm -v "/home/analyst/certbot/conf:/etc/letsencrypt" -v "/home/analyst/certbot/www:/var/www/certbot" certbot/certbot certonly --webroot --webroot-path=/var/www/certbot -d stingily5411.duckdns.org --email my_email@proton.me --agree-tos --no-eff-email
 
 - Next up to set port forwarding from ports 80 and 443 to the server.
 
@@ -178,6 +178,6 @@ docker run --rm -v "/home/analyst/certbot/conf:/etc/letsencrypt" -v "/home/analy
 
 - And there it is. Just type my DDNS into Firefox... Access to my server from anywhere with access to a browser. 
 
-![alt text](placeholder)
+![alt text](https://github.com/Wytchwulf/auld-guard/blob/main/Screenshot%20from%202024-04-07%2022-24-02.png)
 
 - While it's an interesting idea, I don't like the attack surface that opening up my server to the internet in this way provides. I can harden access with Fail2Ban and restrict access to other areas of my network with UFW and other security measures like Vlan but I just have no need for this as I access my network with Wireguard on a VPN I set up on a Pi so keeping this in place would just add an unnecessary point of failure for my network. 
