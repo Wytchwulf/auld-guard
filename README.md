@@ -83,7 +83,7 @@ This project is a proof of concept, so I'll not be keeping it. One of the benefi
 - ```bash
   docker network create web-access-network
 
-- Next up is the docker compose file where I will tell Docker what images to pull and run along with some env details.
+- Next up is the docker compose file where I will tell Docker what images to pull and run along with some environment details.
 - ```yaml
   # sudo vim docker-compose.yml
   services:
