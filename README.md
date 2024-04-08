@@ -81,101 +81,100 @@ This project is a proof of concept, so I'll not be keeping it. One of the benefi
 
 - First I'll need a network for the containers to communicate in and for the server to communicate to. 
 - ```bash
-docker network create web-access-network
+  docker network create web-access-network
 
-- Next up is the docker compose file where I will tell Docker what images to pull and run along with some env details. 
+- Next up is the docker compose file where I will tell Docker what images to pull and run along with some env details.
 - ```yaml
-# sudo vim docker-compose.yml
-services:
-  wetty:
-    image: freeflyer/wetty
-    environment:
-      - REMOTE_SSH_SERVER=192.168.100.150
-      - REMOTE_SSH_PORT=22
-    networks:
-      - web-access-network
-    ports:
-      - "3000:3000"
-
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - web-access-network
-    depends_on:
-      - wetty
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - web-access-network
-
-networks:
-  web-access-network:
-    external: true
+  # sudo vim docker-compose.yml
+  services:
+    wetty:
+      image: freeflyer/wetty
+      environment:
+        - REMOTE_SSH_SERVER=192.168.100.150
+        - REMOTE_SSH_PORT=22
+      networks:
+        - web-access-network
+      ports:
+        - "3000:3000"
+  
+    nginx:
+      image: nginx:alpine
+      volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+      ports:
+        - "80:80"
+        - "443:443"
+      networks:
+        - web-access-network
+      depends_on:
+        - wetty
+  
+    certbot:
+      image: certbot/certbot
+      volumes:
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      networks:
+        - web-access-network
+  
+  networks:
+    web-access-network:
+      external: true
 
 - Now I'll need a config file for the reverse proxy.
 - ```yaml
-# sudo vim nginx.conf
-events {}
-
-http {
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/mime.types;
-
-    # Server for HTTP (port 80) - Redirect all traffic to HTTPS
-    server {
-        listen 80;
-        server_name stingily5411.duckdns.org;
-
-        location /.well-known/acme-challenge/ {
-            root /var/www/certbot;
-            allow all;
-        }
-
-        location / {
-            return 301 https://$host$request_uri;
-        }
-    }
-
-    # Server for HTTPS (port 443)
-    server {
-        listen 443 ssl;
-        server_name stingily5411.duckdns.org;
-
-        ssl_certificate /etc/letsencrypt/live/stingily5411.duckdns.org/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/stingily5411.duckdns.org/privkey.pem;
-
-        location / {
-            proxy_pass http://wetty:3000;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-        }
-    }
-}
+  # sudo vim nginx.conf
+  events {}
+  
+  http {
+      include /etc/nginx/conf.d/*.conf;
+      include /etc/nginx/mime.types;
+  
+      # Server for HTTP (port 80) - Redirect all traffic to HTTPS
+      server {
+          listen 80;
+          server_name stingily5411.duckdns.org;
+  
+          location /.well-known/acme-challenge/ {
+              root /var/www/certbot;
+              allow all;
+          }
+  
+          location / {
+              return 301 https://$host$request_uri;
+          }
+      }
+  
+      # Server for HTTPS (port 443)
+      server {
+          listen 443 ssl;
+          server_name stingily5411.duckdns.org;
+  
+          ssl_certificate /etc/letsencrypt/live/stingily5411.duckdns.org/fullchain.pem;
+          ssl_certificate_key /etc/letsencrypt/live/stingily5411.duckdns.org/privkey.pem;
+  
+          location / {
+              proxy_pass http://wetty:3000;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_set_header Host $host;
+          }
+      }
+  }
 
 - With the reverse proxy in place, insecure connections will be redirected to the https on port 443 where I have ssl certificates set up with LetsEncrypt. To get the certs I needed to request them:
-
 - ```bash
 docker run --rm -v "/home/analyst/certbot/conf:/etc/letsencrypt" -v "/home/analyst/certbot/www:/var/www/certbot" certbot/certbot certonly --webroot --webroot-path=/var/www/certbot -d stingily5411.duckdns.org --email seanpmurdoch@proton.me --agree-tos --no-eff-email
 
 - Next up to set port forwarding from ports 80 and 443 to the server.
 
 - Finally:
-```bash
-docker-compose up -d
+  ```bash
+    docker-compose up -d
 
 - And there it is. Just type my DDNS into Firefox... Access to my server from anywhere with access to a browser. 
 
