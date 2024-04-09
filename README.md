@@ -15,8 +15,8 @@ Wherever relevant I will link the sources I am using for anyone interested in an
 - 🟢  Create a Docker Network to run [Wetty](https://github.com/butlerx/wetty), [Nginx](https://nginx.org/en/) and [Certbot](https://github.com/certbot/certbot) for easy access to my server via my [DDNS](https://duckdns.org) on any browser.
 - 🟢  Bring it all together with Docker Compose.
 - 🟢  Harden security for internet facing port (Let's Encrypt SSL/TLS Encryption, HSTS & CSP headers, UFW, Fail2Ban, Rate Limiting, 2FA, Automation of monitoring, audit logs and updates, Recovery Backup.)
-- 🔴  [Kali](https://kali.org/) Instance (maybe [Parrot](https://parrotsec.org/), havent played with that yet)
-- 🔴  [Tor](https://torproject.org) Relay with [Nyx](https://nyx.torproject.org) Monitoring
+- 🟢  [Kali](https://kali.org/) Instance (maybe [Parrot](https://parrotsec.org/), havent played with that yet)
+- 🟢  [Tor](https://torproject.org) Relay with [Nyx](https://nyx.torproject.org) Monitoring
 - 🔴  Intrusion Detection with [Suricata](https://suricata.io/)
 - 🔴  Run Dolphin Mistral 2.8 Locally with Ollama.
 - 🔴  And Beyond?
@@ -30,6 +30,8 @@ Wherever relevant I will link the sources I am using for anyone interested in an
   - [Lets Begin!](#lets-begin!)
   - [Docker](#docker)
   - [Docker Compose - Wetty / Nginx / Certbot](#docker-compose)
+  - [ParrotOS](#parrotos)
+  - [Tor Relay](#tor-relay)
  
 ## Lets Begin!
 
@@ -180,4 +182,73 @@ This project is a proof of concept, so I'll not be keeping it. One of the benefi
 
 ![alt text](https://github.com/Wytchwulf/auld-guard/blob/main/Screenshot%20from%202024-04-07%2022-24-02.png)
 
-- While it's an interesting idea, I don't like the attack surface that opening up my server to the internet in this way provides. I can harden access with Fail2Ban and restrict access to other areas of my network with UFW and other security measures like Vlan but I just have no need for this as I access my network with Wireguard on a VPN I set up on a Pi so keeping this in place would just add an unnecessary point of failure for my network. 
+- While it's an interesting idea, I don't like the attack surface that opening up my server to the internet in this way provides. I can harden access with Fail2Ban and restrict access to other areas of my network with UFW and other security measures like Vlan but I just have no need for this as I access my network with Wireguard on a VPN I set up on a Pi so keeping this in place would just add an unnecessary point of failure for my network.
+
+## ParrotOS
+
+One line install. I'll come back to this
+
+## Tor Relay
+
+I'm particularly proud of this one. I'm becoming increasingly concerned about the significant intrusion into our personal lives by major corporations and government entities. For those who argue, "If you have nothing to hide, you have nothing to fear," I suggest a quick review of history. Examples abound, such as the Prohibition era in the US, the Enabling Act in Germany, and more recently, the Digital Economy Act in the UK, the Patriot Act in the US, and the overturning of Roe v. Wade. I firmly support free speech in its absolute form, especially since, in some regions of the world, tools like Tor are crucial for enabling communication within regimes that seek to suppress their citizens' freedoms. I've always been eager to support the Tor Project because I deeply believe in its mission. To this end, I've created a separate page with easy-to-follow instructions on setting up Tor on Docker. I'm sharing these instructions here and encourage anyone with a Raspberry Pi, an old laptop, or any device capable of running a relay to get involved.
+
+### Dockerfile
+
+- sudo vim Dockerfile
+  ```yaml
+  FROM debian:buster-slim
+
+  RUN apt-get update && \
+      apt-get install -y --no-install-recommends apt-transport-https gnupg2 curl ca-certificates && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/*
+  
+  RUN echo 'deb [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org buster main' > /etc/apt/sources.list.d/tor.list && \
+      echo 'deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org buster main' >> /etc/apt/sources.list.d/tor.list && \
+      curl -s https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null
+  
+  RUN apt-get update && \
+      apt-get install -y tor deb.torproject.org-keyring nyx haveged && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/*
+  
+  RUN mkdir -p /var/lib/tor && \
+      chown -R debian-tor:debian-tor /var/lib/tor
+  
+  COPY torrc /etc/tor/torrc
+  
+  EXPOSE 9001
+  EXPOSE 9051
+  EXPOSE 9050
+  
+  USER debian-tor
+  
+  CMD ["tor", "-f", "/etc/tor/torrc"]
+
+### torrc
+
+- sudo vim torrc
+  ```yaml
+  DataDirectory /var/lib/tor
+
+  ORPort 9001
+  ExitPolicy reject *:* # Reject all exit traffic
+  
+  RelayBandwidthRate 1024 KBytes
+  RelayBandwidthBurst 2048 KBytes
+  
+  NumEntryGuards 3
+  
+  ControlPort 9051
+  CookieAuthentication 1
+  
+  ContactInfo <<YOUR_NAME>> <<YOUR_EMAIL>>
+
+### Bring it all together
+
+- Build Image
+  ```bash
+  docker build -t tor-relay .
+
+- Run Container
+  ```bash
