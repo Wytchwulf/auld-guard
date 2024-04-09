@@ -244,7 +244,7 @@ I'm particularly proud of this one. I'm becoming increasingly concerned about th
   
   ContactInfo <<YOUR_NAME>> <<YOUR_EMAIL>>
 
-### Bring it all together
+## Bring it all together
 
 - Build Image
   ```bash
@@ -252,3 +252,8 @@ I'm particularly proud of this one. I'm becoming increasingly concerned about th
 
 - Run Container
   ```bash
+  docker run -d --name my-tor-relay -p 9001:9001 -p 9051:9051 -p 9050:9050 tor-relay
+
+- Monitor Logs
+  ```bash
+  docker exec -it my-tor-relay nyx
