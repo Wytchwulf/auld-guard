@@ -17,9 +17,6 @@ Wherever relevant I will link the sources I am using for anyone interested in an
 - 🟢  Harden security for internet facing port (Let's Encrypt SSL/TLS Encryption, HSTS & CSP headers, UFW, Fail2Ban, Rate Limiting, 2FA, Automation of monitoring, audit logs and updates, Recovery Backup.)
 - 🟢  [Kali](https://kali.org/) Instance (maybe [Parrot](https://parrotsec.org/), havent played with that yet)
 - 🟢  [Tor](https://torproject.org) Relay with [Nyx](https://nyx.torproject.org) Monitoring
-- 🔴  Intrusion Detection with [Suricata](https://suricata.io/)
-- 🔴  Run Dolphin Mistral 2.8 Locally with Ollama.
-- 🔴  And Beyond?
   
 ## Table of Contents
 
@@ -186,7 +183,7 @@ This project is a proof of concept, so I'll not be keeping it. One of the benefi
 
 ## ParrotOS
 
-One line install. I'll come back to this
+One line install. While it possible 
 
 ## Tor Relay
 
@@ -249,11 +246,18 @@ I'm particularly proud of this one. I'm becoming increasingly concerned about th
 - Build Image
   ```bash
   docker build -t tor-relay .
-
+  ```
+  
 - Run Container
   ```bash
   docker run -d --name my-tor-relay -p 9001:9001 -p 9051:9051 -p 9050:9050 tor-relay
+  ```
 
 - Monitor Logs
   ```bash
   docker exec -it my-tor-relay nyx
+  ```
+
+  ## AI
+
+I tried running some AI on the rig but the old man wasn't up to the task. Old AMD graphics card evidently not the best for deep learning.
